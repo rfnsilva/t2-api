@@ -38,12 +38,5 @@
     "@typescript-eslint/camelcase": "off",
     "prettier/prettier": "error",
     "class-methods-use-this": "off"
-  },
-  "settings": {
-    "import/resolver": {
-      "typescript": {
-        "directory": "api/tsconfig.json"
-      }
-    }
   }
 }

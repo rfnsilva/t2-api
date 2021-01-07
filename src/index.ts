@@ -11,7 +11,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(routes);
 
-dotenv.config();
+dotenv.config({ path: process.env.NODE_ENV === "test" ? ".env.test" : ".env" });
 createConnection();
+
+// console.log(process.env.NODE_ENV);
 
 app.listen(process.env.PORT || 3333);
