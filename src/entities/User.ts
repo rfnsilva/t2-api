@@ -1,11 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, ObjectIdColumn, ObjectID, Column } from "typeorm";
 
 @Entity("user")
 export class User {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
+  @ObjectIdColumn()
+  id: ObjectID;
 
-  @Column("varchar", { nullable: true })
+  @Column("varchar", { nullable: false })
   name: string;
 
   @Column("varchar", { unique: true })
