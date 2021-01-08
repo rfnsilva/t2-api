@@ -1,6 +1,11 @@
 import "reflect-metadata";
 import express from "express";
-import { getConnection, createConnection, getMongoManager } from "typeorm";
+import {
+  getConnection,
+  getRepository,
+  createConnection,
+  getMongoManager,
+} from "typeorm";
 import supertest from "supertest";
 import * as bodyParser from "body-parser";
 import { expect } from "chai";
@@ -32,6 +37,7 @@ describe("User CRUD", () => {
   });
 
   afterAll(async () => {
+    await getRepository(User).clear();
     const connection = getConnection();
     await connection.close();
   });

@@ -1,6 +1,11 @@
 import "reflect-metadata";
 import express from "express";
-import { createConnection, getConnection, getMongoManager } from "typeorm";
+import {
+  createConnection,
+  getRepository,
+  getConnection,
+  getMongoManager,
+} from "typeorm";
 import supertest from "supertest";
 import * as dotenv from "dotenv";
 import * as bodyParser from "body-parser";
@@ -35,6 +40,7 @@ describe("authenticate", () => {
   });
 
   afterAll(async () => {
+    await getRepository(User).clear();
     const connection = getConnection();
     await connection.close();
   });
