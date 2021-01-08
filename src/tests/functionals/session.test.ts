@@ -7,6 +7,7 @@ import * as bodyParser from "body-parser";
 import { expect, assert } from "chai";
 
 import routes from "../../routes";
+
 import { User } from "../../entities/User";
 
 const app = express();
@@ -38,7 +39,7 @@ describe("authenticate", () => {
     await connection.close();
   });
 
-  test("session user jwt token", async () => {
+  test("session user and return jwt token", async () => {
     const user = {
       name: "user_test",
       email: "user@test.com",
