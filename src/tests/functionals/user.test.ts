@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import express from "express";
-import { createConnection, getRepository, getConnection } from "typeorm";
+import { getConnection, createConnection, getMongoManager } from "typeorm";
 import supertest from "supertest";
 import * as bodyParser from "body-parser";
 import { expect } from "chai";
@@ -12,29 +12,30 @@ const app = express();
 app.use(bodyParser.json());
 app.use(routes);
 
-beforeAll(async () => {
-  return createConnection({
-    type: "mongodb",
-    host: "localhost",
-    database: "t2_testing",
-    useUnifiedTopology: true,
-    synchronize: true,
-    logging: false,
-    entities: ["src/entities/**/*.ts"],
-    migrations: ["src/migration/**/*.ts"],
-  });
-});
-
-afterEach(async () => {
-  await getRepository(User).clear();
-});
-
-afterAll(async () => {
-  const connection = getConnection();
-  connection.close();
-});
-
 describe("User CRUD", () => {
+  beforeAll(async () => {
+    return createConnection({
+      type: "mongodb",
+      host: "localhost",
+      database: "t2_testing",
+      useUnifiedTopology: true,
+      synchronize: true,
+      logging: false,
+      entities: ["src/entities/**/*.ts"],
+      migrations: ["src/migration/**/*.ts"],
+    });
+  });
+
+  beforeEach(async () => {
+    const manager = getMongoManager();
+    await manager.clear(User);
+  });
+
+  afterAll(async () => {
+    const connection = getConnection();
+    await connection.close();
+  });
+
   test("create user", async () => {
     const user = {
       name: "user_test",
