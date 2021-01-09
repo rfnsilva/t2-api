@@ -1,5 +1,6 @@
 import * as dotenv from "dotenv";
 import { Request, Response, NextFunction } from "express";
+
 import { token } from "../../services/generateToken";
 import { auth } from "../../middlewares/auth";
 

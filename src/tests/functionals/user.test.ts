@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import express from "express";
+import * as dotenv from "dotenv";
 import {
   getConnection,
   getRepository,
@@ -10,12 +11,15 @@ import supertest from "supertest";
 import * as bodyParser from "body-parser";
 import { expect } from "chai";
 
+import { token } from "../../services/generateToken";
+
 import routes from "../../routes";
 import { User } from "../../entities/User";
 
 const app = express();
 app.use(bodyParser.json());
 app.use(routes);
+dotenv.config();
 
 describe("User CRUD", () => {
   beforeAll(async () => {
@@ -50,8 +54,12 @@ describe("User CRUD", () => {
       cpf: "12345678",
       phone: "12345678",
     };
+    const tokenResponse = await token(user.email);
 
-    const response = await supertest(app).post(`/createUser`).send(user);
+    const response = await supertest(app)
+      .post(`/createUser`)
+      .send(user)
+      .set("authorization", "bearer " + tokenResponse);
 
     expect(response.status).to.equal(201);
   });
@@ -64,12 +72,16 @@ describe("User CRUD", () => {
       cpf: "12345678",
       phone: "12345678",
     };
+    const tokenResponse = await token(user.email);
 
-    const response = await supertest(app).post(`/createUser`).send(user);
+    const response = await supertest(app)
+      .post(`/createUser`)
+      .send(user)
+      .set("authorization", "bearer " + tokenResponse);
 
-    const userResponse = await supertest(app).get(
-      `/getUser/${response.body.id}`
-    );
+    const userResponse = await supertest(app)
+      .get(`/getUser/${response.body[0].id}`)
+      .set("authorization", "bearer " + tokenResponse);
 
     expect(userResponse.status).to.equal(200);
     // expect(response.status).exist();
@@ -83,10 +95,16 @@ describe("User CRUD", () => {
       cpf: "12345678",
       phone: "12345678",
     };
+    const tokenResponse = await token(user.email);
 
-    const response = await supertest(app).post(`/createUser`).send(user);
+    await supertest(app)
+      .post(`/createUser`)
+      .send(user)
+      .set("authorization", "bearer " + tokenResponse);
 
-    const userResponse = await supertest(app).get(`/getUsers`);
+    const userResponse = await supertest(app)
+      .get(`/getUsers`)
+      .set("authorization", "bearer " + tokenResponse);
 
     expect(userResponse.status).to.equal(200);
     // expect(response.status).exist();
@@ -100,8 +118,12 @@ describe("User CRUD", () => {
       cpf: "12345678",
       phone: "12345678",
     };
+    const tokenResponse = await token(user.email);
 
-    const response = await supertest(app).post(`/createUser`).send(user);
+    const response = await supertest(app)
+      .post(`/createUser`)
+      .send(user)
+      .set("authorization", "bearer " + tokenResponse);
 
     const userUpdate = {
       name: "name_test_update",
@@ -112,8 +134,9 @@ describe("User CRUD", () => {
     };
 
     const userResponse = await supertest(app)
-      .put(`/updateUser/${response.body.id}`)
-      .send(userUpdate);
+      .put(`/updateUser/${response.body[0].id}`)
+      .send(userUpdate)
+      .set("authorization", "bearer " + tokenResponse);
 
     expect(userResponse.status).to.equal(200);
   });
@@ -126,12 +149,16 @@ describe("User CRUD", () => {
       cpf: "12345678",
       phone: "12345678",
     };
+    const tokenResponse = await token(user.email);
 
-    const response = await supertest(app).post(`/createUser`).send(user);
+    const response = await supertest(app)
+      .post(`/createUser`)
+      .send(user)
+      .set("authorization", "bearer " + tokenResponse);
 
-    const userResponse = await supertest(app).delete(
-      `/deleteUser/${response.body.id}`
-    );
+    const userResponse = await supertest(app)
+      .delete(`/deleteUser/${response.body[0].id}`)
+      .set("authorization", "bearer " + tokenResponse);
 
     expect(userResponse.status).to.equal(200);
   });

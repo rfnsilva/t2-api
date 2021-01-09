@@ -11,6 +11,8 @@ import * as dotenv from "dotenv";
 import * as bodyParser from "body-parser";
 import { expect, assert } from "chai";
 
+import { token } from "../../services/generateToken";
+
 import routes from "../../routes";
 
 import { User } from "../../entities/User";
@@ -53,8 +55,12 @@ describe("authenticate", () => {
       cpf: "12345678",
       phone: "12345678",
     };
+    const tokenResponse = await token(user.email);
 
-    await supertest(app).post(`/createUser`).send(user);
+    await supertest(app)
+      .post(`/createUser`)
+      .send(user)
+      .set("authorization", "bearer " + tokenResponse);
 
     const responseSession = await supertest(app)
       .post(`/session`)
