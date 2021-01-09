@@ -6,8 +6,11 @@ import {
   getUser,
   updateUser,
   deleteUser,
+  getUsers,
 } from "./controllers/UserController";
 import { session } from "./controllers/SessionController";
+
+import { auth } from "./middlewares/auth";
 
 const routes = Router();
 
@@ -19,8 +22,11 @@ routes.get("/", (request: Request, response: Response) => {
 
 routes.post("/session", session);
 
+routes.use(auth);
+
 routes.post("/createUser", createUser);
 routes.get("/getUser/:id", getUser);
+routes.get("/getUsers", getUsers);
 routes.put("/updateUser/:id", updateUser);
 routes.delete("/deleteUser/:id", deleteUser);
 

@@ -10,7 +10,7 @@ export const createUser = async (req: Request, res: Response) => {
 
   const passwordHash = await bcrypt.hash(password, 8);
 
-  const user = await getRepository(User).save({
+  await getRepository(User).save({
     name,
     email,
     cpf,
@@ -18,7 +18,9 @@ export const createUser = async (req: Request, res: Response) => {
     password: passwordHash,
   });
 
-  return res.status(201).json(user);
+  const users = await getRepository(User).find();
+
+  return res.status(201).json(users);
   // return res.status(404).json({ message: "erro ao pegar getHome" });
 };
 
@@ -31,13 +33,28 @@ export const getUser = async (req: Request, res: Response) => {
   return res.status(200).json(user);
 };
 
+// get_users
+export const getUsers = async (req: Request, res: Response) => {
+  const users = await getRepository(User).find();
+
+  return res.status(200).json(users);
+};
+
 // update user by id
 export const updateUser = async (req: Request, res: Response) => {
-  const id = req.params.id;
+  // const id = req.params.id;
+  let { id, name, email, phone, cpf } = req.body;
+  id = req.params.id;
 
-  const resultado = await getRepository(User).update(id, req.body);
+  const results = await getRepository(User).update(id, {
+    id,
+    name,
+    email,
+    phone,
+    cpf,
+  });
 
-  if (resultado.affected === 0) {
+  if (results.affected === 0) {
     return res.status(404).json({ message: "error update user" });
   }
 
@@ -50,9 +67,9 @@ export const updateUser = async (req: Request, res: Response) => {
 export const deleteUser = async (req: Request, res: Response) => {
   const id = req.params.id;
 
-  const resultado = await getRepository(User).delete(id);
+  const results = await getRepository(User).delete(id);
 
-  if (resultado.affected === 0) {
+  if (results.affected === 0) {
     return res.status(404).json({ message: "error delete user" });
   }
 

@@ -75,6 +75,23 @@ describe("User CRUD", () => {
     // expect(response.status).exist();
   });
 
+  test("get all User", async () => {
+    const user = {
+      name: "user_test",
+      email: "user@test.com",
+      password: "12345678",
+      cpf: "12345678",
+      phone: "12345678",
+    };
+
+    const response = await supertest(app).post(`/createUser`).send(user);
+
+    const userResponse = await supertest(app).get(`/getUsers`);
+
+    expect(userResponse.status).to.equal(200);
+    // expect(response.status).exist();
+  });
+
   test("update user by id", async () => {
     const user = {
       name: "name_test",
