@@ -5,20 +5,31 @@
   "license": "MIT",
   "scripts": {
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files --no-copy-ignored",
-    "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules --no-notify src/index.ts",
+    "dev": "NODE_ENV=development ts-node-dev --respawn --transpile-only --ignore-watch node_modules --no-notify src/index.ts",
+    "dev:docker": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules --no-notify src/index.ts",
     "start": "node dist/index.js",
-    "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
-    "test": "jest --runInBand"
+    "typeorm": "NODE_ENV=development node --require ts-node/register ./node_modules/typeorm/cli.js",
+    "typeorm:docker": "node --require ts-node/register ./node_modules/typeorm/cli.js",
+    "test": "jest --runInBand",
+    "swagger-autogen": "node swagger.js",
+    "db:migrate": "yarn run typeorm:docker migration:run"
+
   },
   "dependencies": {
+    "@tsed/common": "^6.20.0",
+    "@tsed/swagger": "^6.20.0",
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-swagger-generator": "^1.1.17",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.3",
-    "mongoose": "^5.11.10",
     "reflect-metadata": "^0.1.13",
+    "swagger-autogen": "^1.2.5",
+    "swagger-jsdoc": "^6.0.1",
+    "swagger-ui-express": "^4.1.4",
+    "tsoa": "^3.4.0",
     "typeorm": "^0.2.27"
   },
   "devDependencies": {
@@ -38,6 +49,7 @@
     "@types/jsonwebtoken": "^8.5.0",
     "@types/node": "^14.11.2",
     "@types/supertest": "^2.0.10",
+    "@types/swagger-ui-express": "^4.1.2",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",
     "babel-plugin-module-resolver": "^4.0.0",

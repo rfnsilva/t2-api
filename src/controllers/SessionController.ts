@@ -1,7 +1,8 @@
 import { getRepository } from "typeorm";
 import { Request, Response } from "express";
-import { token } from "../services/generateToken";
 import * as bcrypt from "bcrypt";
+
+import { token } from "../services/generateToken";
 
 import { User } from "../entities/User";
 

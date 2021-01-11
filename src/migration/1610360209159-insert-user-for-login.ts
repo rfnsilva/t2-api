@@ -1,0 +1,33 @@
+import { MigrationInterface, getMongoRepository } from "typeorm";
+import * as bcrypt from "bcrypt";
+
+import { User } from "../entities/User";
+
+export class insertUserForLogin1610360209159 implements MigrationInterface {
+  public async up(): Promise<void> {
+    const passwordHash = await bcrypt.hash("admin", 8);
+
+    const user = {
+      name: "admin",
+      email: "admin",
+      phone: "admin",
+      cpf: "admin",
+      password: passwordHash,
+    };
+
+    const userRepository = getMongoRepository(User);
+    await userRepository.save(user);
+  }
+
+  public async down(): Promise<void> {
+    const userRepository = getMongoRepository(User);
+
+    const user = await userRepository.find({
+      where: {
+        email: "admin",
+      },
+    });
+
+    await userRepository.delete(user[0].id);
+  }
+}
