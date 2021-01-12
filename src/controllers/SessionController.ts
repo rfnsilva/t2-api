@@ -11,11 +11,17 @@ export const session = async (req: Request, res: Response) => {
 
   const user = await getRepository(User).findOne({ email: email });
 
-  if (await bcrypt.compare(password, user.password)) {
-    const tokenSession = await token(email);
+  if (user !== undefined) {
+    if (await bcrypt.compare(password, user.password)) {
+      const tokenSession = await token(email);
 
-    return res.status(200).json({ token: tokenSession, user: { user: user } });
+      return res
+        .status(200)
+        .json({ token: tokenSession, user: { user: user } });
+    } else {
+      return res.json({ message: "error password incorrect" });
+    }
   } else {
-    return res.status(404).json({ messge: "error session controler" });
+    return res.json({ message: "error user not found" });
   }
 };

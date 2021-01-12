@@ -5,11 +5,11 @@ import { User } from "../entities/User";
 
 export class insertUserForLogin1610360209159 implements MigrationInterface {
   public async up(): Promise<void> {
-    const passwordHash = await bcrypt.hash("admin", 8);
+    const passwordHash = await bcrypt.hash("123456", 8);
 
     const user = {
       name: "admin",
-      email: "admin",
+      email: "admin@admin.com",
       phone: "admin",
       cpf: "admin",
       password: passwordHash,
@@ -24,7 +24,7 @@ export class insertUserForLogin1610360209159 implements MigrationInterface {
 
     const user = await userRepository.find({
       where: {
-        email: "admin",
+        email: "admin@admin.com",
       },
     });
 
